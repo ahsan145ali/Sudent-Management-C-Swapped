@@ -1,3 +1,4 @@
+
 #ifndef __SUBJECT_H__
 #define __SUBJECT_H__
 
@@ -8,9 +9,9 @@ struct Enrollment;
 struct Subject{
     short id;
     char* name;
-    Teacher* subjectTeacher;
-    Enrollment* enrollments;
-    Subject* next;
+    struct Teacher *subjectTeacher;
+    struct  Enrollment *enrollments;
+    struct Subject * next;
 };
 
 

@@ -84,12 +84,44 @@ int displaySubjectMenu(){
         if (result != 1) {
             while (getchar() != '\n');  // Read and discard characters until a newline is found
             printf("\nInvalid selection, please select a valid option.\n");
-            return displayStudentMenu();
+            return displaySubjectMenu();
         }
 
         if (choice>5 || choice<1){//outside of range
             printf("Invalid selection.\n");
-            return displayStudentMenu();
+            return displaySubjectMenu();
+        }else{
+            return choice;
+        }
+
+    return -1; 
+    
+}
+
+int displayTeacherMenu(){
+        
+        int choice; 
+        int result;
+    
+        printf("\n======================= Teacher Menu =======================\n");
+        printf("\nPlease Select an option:\n\n");
+        printf("1. View all Teachers\n");
+        printf("2. Add Teacher\n");
+        printf("3. Retrieve Teacher data by ID\n");
+        printf("4. Retrieve Teacher by Subject\n");
+        printf("5. Return to Main Menu\n");
+        printf("\nChoice: ");
+
+       result = scanf("%d", &choice);
+        if (result != 1) {
+            while (getchar() != '\n');  // Read and discard characters until a newline is found
+            printf("\nInvalid selection, please select a valid option.\n");
+            return displayTeacherMenu();
+        }
+
+        if (choice>5 || choice<1){//outside of range
+            printf("Invalid selection.\n");
+            return displayTeacherMenu();
         }else{
             return choice;
         }

@@ -26,7 +26,7 @@ void addStudent(){ //Retrieves user input on new student and calls createStudent
     printf("\n");
     short id = findAvailID(head); // finds the ID of the next created student.
     clearInput();
-    char* name = stringInput("Name"); //allocates size to store the user name
+    char* name = stringInput("Name"); // gets input from user and allocates size to store the user name
     printf("New student created.\n");
     printf("\n");
     struct Student* newStudent = createStudent(id,name); //pointer stored in newStudent variable (not used at the moment)

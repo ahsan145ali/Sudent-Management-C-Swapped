@@ -7,4 +7,6 @@ int displayMainMenu();
 int displayStudentMenu();
 
 int displaySubjectMenu();
+
+int displayTeacherMenu();
 #endif 
