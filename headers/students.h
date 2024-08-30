@@ -24,6 +24,7 @@ short findAvailID(struct Student* head);
 struct Student* createStudent(short id, char* name);
 struct Student* findTail(struct Student* head);
 void enrollStudentinSubject();
+void assignGrade();
 
 
 #endif // __STUDENTS_H__

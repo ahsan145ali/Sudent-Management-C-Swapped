@@ -45,7 +45,8 @@ int displayStudentMenu(){
         printf("3. Retrieve Student data by ID\n");
         printf("4. Retrieve Student data by Name\n");
         printf("5. Enroll a  Student \n");
-        printf("6. Return to Main Menu\n");
+        printf("6. Assign a  Grade \n");
+        printf("7. Return to Main Menu\n");
         printf("\nChoice: ");
        
        
@@ -56,7 +57,7 @@ int displayStudentMenu(){
             return displayStudentMenu();
         }
 
-        if (choice>6 || choice<1){//outside of range
+        if (choice>7 || choice<1){//outside of range
             printf("Invalid selection.\n");
             return displayStudentMenu();
         }else{

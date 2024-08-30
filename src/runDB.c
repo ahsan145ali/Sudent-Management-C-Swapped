@@ -19,6 +19,7 @@ int main(void){
             else if(studentMenuNavigate==3) retrieveStudentByID();
             else if(studentMenuNavigate==4) displayStudentByName();
             else if(studentMenuNavigate==5) enrollStudentinSubject();
+            else if(studentMenuNavigate==6) assignGrade();
         }
         else if (mainMenuNavigate==2){ // user selects subject menu
 

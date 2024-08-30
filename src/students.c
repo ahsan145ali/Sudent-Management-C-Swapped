@@ -16,7 +16,7 @@ void displayAllStudents() { //Displays information of all students
     while (temp != NULL) { //iterates through linked list, printing out details of each node (student)
         printf("ID: %d \n", temp->id); 
         printf("Name: %s \n", temp->name); 
-        if(temp->enrollments!=NULL)  printf("Enrolled in: %s \n", temp->enrollments->subjectptr->name);
+        if(temp->enrollments!=NULL)  printf("Enrolled in: %s \nGrade: %c \n", temp->enrollments->subjectptr->name , temp->enrollments->grade);
         else printf("Enrolled: Not yet enrolled in any subject");
         printf("Next Address: %p \n", (void*)temp->next);
         temp = temp->next; 
@@ -169,5 +169,35 @@ void enrollStudentinSubject(){
     }
     else{
         return ; // return if student not retrieved
+    }
+}
+
+void assignGrade(){
+    printf("\n=================== Enroll a Student ===================\n");
+    printf("Input Student ID to assign grade in a subject: \n");
+    struct Student* st = retrieveStudentByID();
+    if(st != NULL) // check if student was retrieved successfully
+    {
+        if(st->enrollments == NULL)
+        {
+            printf("Student not enrolled in any subject \n");
+            return;
+        }
+        printf("Assign Grade for Subject %s \n" , st->enrollments->subjectptr->name);
+        char c;
+        clearInput();
+        if(scanf("%c" , &c) == 1){
+            st->enrollments->grade = c;
+            printf("Assigned %c Grade for Subject %s \n" , st->enrollments->grade,st->enrollments->subjectptr->name);
+        }
+        else{
+            clearInput();
+            printf("Invalid Input");
+        }
+
+    }
+    else
+    {
+        return; // return if student not retrieved
     }
 }
