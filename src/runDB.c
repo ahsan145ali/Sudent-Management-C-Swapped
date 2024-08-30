@@ -2,6 +2,7 @@
 #include "DisplayMenus.h"
 #include "students.h"
 #include "teachers.h"
+#include "subjects.h"
 
 int main(void){
         
@@ -22,12 +23,18 @@ int main(void){
         else if (mainMenuNavigate==2){ // user selects subject menu
 
            int subjectMenuNavigate = displaySubjectMenu();
+           if(subjectMenuNavigate==1) displayAllSubjects();
+           else if(subjectMenuNavigate == 2) addSubject();
+           else if(subjectMenuNavigate == 3) displaySubjectByID();
+           else if(subjectMenuNavigate == 4) displaySubjectByName();
         }
         else if(mainMenuNavigate == 3){ // user selects teacher menu
            int teacherMenuNavigate = displayTeacherMenu();
            
            if(teacherMenuNavigate==1) displayAllTeachers();
            else if(teacherMenuNavigate == 2) addTeacher();
+           else if(teacherMenuNavigate == 3) displayTeacherByID();
+           else if(teacherMenuNavigate == 4) displayTeacherBySubject();
         }
         else if (mainMenuNavigate==6){
             printf("\n================= Closing School DB System =================\n");

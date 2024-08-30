@@ -4,14 +4,19 @@
 #include <string.h>
 #include "Utils.h"
 
-struct Teacher firstTeacher = {1, "John Doe", NULL, NULL}; //Creates first student
-struct Teacher* headTeacher = &firstTeacher; //sets first student address to be head of linked list.
+
+struct Teacher* headTeacher = NULL; // Maintains the head of the link list
+struct Teacher* tailTeacher = NULL; // Maintains the tail of the link list
 
 void displayAllTeachers(){
     printf("\n=================== Display All Teachers ===================\n");
     printf("\n");
     struct Teacher *temp = headTeacher;
-    while (temp != NULL) { //iterates through linked list, printing out details of each node (student)
+    if(temp == NULL){
+        printf("No Teacher \n");
+        return;
+    }
+    while (temp != NULL) { //iterates through linked list, printing out details of each node 
         printf("ID: %d \n", temp->id); 
         printf("Name: %s \n", temp->name); 
         printf("Subjects Address: %p \n", (void*)temp->subject);
@@ -24,41 +29,84 @@ void displayAllTeachers(){
 void addTeacher(){ //Retrieves user input on new student and calls createStudent()
     printf("\n====================== Create Student ======================\n");
     printf("\n");
-    short id = findTeacherAvailID(headTeacher); // finds the ID of the next created student.
-    clearInput();
-    char* name = stringInput("Name"); // gets input from user and allocates size to store the user name
-    printf("New Teacher created.\n");
-    printf("\n");
-    struct Teacher* newTeacher = createTeacher(id,name); //pointer stored in newStudent variable (not used at the moment)
+    short id = 0;
+    if(headTeacher == NULL){
+        struct Teacher* ptr = malloc(sizeof(struct Teacher));
+        id = 1;
+        clearInput();
+        char* name = stringInput("Name"); // gets input from user and allocates size to store the user name
+        printf("New Teacher created.\n");
+        printf("\n");
+        ptr->id = id;
+        ptr->name = malloc(strlen(name) * sizeof(char));
+        strncpy(ptr->name , name , strlen(name));
+        ptr->next = NULL;
+        ptr->subject = NULL;
+        headTeacher = ptr;
+        tailTeacher = ptr;
+    }
+    else{
+        id = findTeacherAvailID(); // finds the ID of the next created student.
+        clearInput();
+        char* name = stringInput("Name"); // gets input from user and allocates size to store the user name
+        printf("New Teacher created.\n");
+        printf("\n");
+        struct Teacher* newTeacher = createTeacher(id,name); //pointer stored in newStudent variable (not used at the moment)
+    }
 }
 
 struct Teacher* createTeacher(short id, char* name){ // creates new student and appends to linked list
-    struct Teacher* tail = findTeacherTail(headTeacher); //stores tail so that previous tail'next' address can be added
+    //struct Teacher* tail = findTeacherTail(headTeacher); //stores tail so that previous tail'next' address can be added
     struct Teacher* newTeacher = malloc(sizeof(struct Teacher));
-    tail->next = newTeacher;
+    tailTeacher->next = newTeacher;
     
     newTeacher->id = id;
 
     newTeacher->name = malloc(strlen(name) + 1); //this ensures that persistent memory is assigned to the name
     strcpy(newTeacher->name, name); //and copies it into this memory
 
-    newTeacher->subject = NULL; //new students are not enrolled in anything
+    newTeacher->subject = NULL; //new teacher does not have any subject yet
+    newTeacher->next = NULL; //next is null to signify end of the list
 
-    newTeacher->next = NULL; //this node becomes the tail
-
+    tailTeacher = newTeacher; // set tail to new added node as it is the last
     return newTeacher;
 }//use malloc here
 
-short findTeacherAvailID(struct Teacher* head){ //finds the next available ID (auto increment)
-    struct Teacher* tail = findTeacherTail(head); //calls get tail to find previous tail of linked list
-    short newID = (tail->id)+1; //adds one to tail ID to find newID
+short findTeacherAvailID(){ //finds the next available ID (auto increment)
+    short newID = (tailTeacher->id)+1; //adds one to tail ID to find newID
     return newID; //returns the newID
 }
 
-struct Teacher* findTeacherTail(struct Teacher* head){ //finds linked list tail
-    struct Teacher *temp = head;
-    while ((temp->next) != NULL){ // searches for linked list node with next = NULl and deduces this is the tail
-        temp = temp -> next;
+void displayTeacherByID(){
+    printf("\n==================== Find Teacher By ID ====================\n");
+    short id;
+    int result;
+    printf("\nEnter Teacher ID:");
+    result = scanf("%hd",&id); 
+    printf("\n");
+
+    if (result != 1) { //sanitises input - calls itself recursively until valid input (only accepts integers)
+        while (getchar() != '\n');  // Read and discard characters until a newline is found
+        printf("Invalid selection, please input a valid ID number.\n");
+        return displayTeacherByID();
     }
-    return temp; //returns the tail
+
+    struct Teacher *temp = headTeacher;
+
+     while (temp != NULL) { //cycles through teachers until end of list or teacher found
+        if((temp->id) == id){ //if teacher found
+            printf("ID: %d \n", temp->id); //print details
+            printf("Name: %s \n", temp->name); 
+            printf("Enrollment Address: %p \n", (void*)temp->subject);
+            printf("Next Address: %p \n", (void*)temp->next);
+            return;
+        }
+        temp = temp->next; 
+    }
+    printf("Teacher with ID: %hd not found \n" , id);
+}
+
+void displayTeacherBySubject()
+{
+    return;
 }

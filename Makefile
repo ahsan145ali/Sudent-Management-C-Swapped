@@ -2,7 +2,7 @@ CC=gcc
 BINS=runDB
 BIN_PATH=src/$(BINS)
 CFLAGS=-Iheaders
-SRC=src/runDB.c src/students.c src/Utils.c src/DisplayMenus.c src/teachers.c #src/subjects.c
+SRC=src/runDB.c src/students.c src/Utils.c src/DisplayMenus.c src/teachers.c src/subjects.c
 
 all: $(BIN_PATH)
 
