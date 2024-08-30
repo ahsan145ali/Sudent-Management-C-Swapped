@@ -4,6 +4,8 @@
 #include <string.h>
 #include "Utils.h"
 #include "teachers.h"
+#include "enrollments.h"
+#include "students.h"
 
 struct Subject* headSubject = NULL; // Maintains the head of the link list
 struct Subject* tailSubject = NULL; // Maintains the tail of the link list
@@ -23,8 +25,8 @@ void displayAllSubjects(){
         printf("Name: %s \n", temp->name); 
         if(temp->subjectTeacher != NULL)  printf("Teacher: %s \n", temp->subjectTeacher->name);
         else printf("Teacher: NOT ASSIGNED \n");
-        printf("Enrollment Address: %p \n", (void*)temp->enrollments);
-        printf("Next Address: %p \n", (void*)temp->next);
+        if(temp->enrollments != NULL)  printf("Enrolled Student: %s \n", temp->enrollments->studentptr->name);
+        else printf("Enrolled: No student enrolled yet \n");
         temp = temp->next; 
         printf("\n");
     }

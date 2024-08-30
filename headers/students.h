@@ -18,11 +18,12 @@ struct Student {
 // Function declarations
 void displayAllStudents();
 void addStudent();
-void displayStudentByID();
+struct Student* retrieveStudentByID();
 void displayStudentByName();
 short findAvailID(struct Student* head);
 struct Student* createStudent(short id, char* name);
 struct Student* findTail(struct Student* head);
+void enrollStudentinSubject();
 
 
 #endif // __STUDENTS_H__

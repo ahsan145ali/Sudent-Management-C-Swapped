@@ -3,6 +3,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include "Utils.h"
+#include "subjects.h"
+#include "enrollments.h"
 struct Student firstStudent = {1, "Samuel Elliott", NULL, NULL}; //Creates first student
 struct Student* head = &firstStudent; //sets first student address to be head of linked list.
 
@@ -14,7 +16,8 @@ void displayAllStudents() { //Displays information of all students
     while (temp != NULL) { //iterates through linked list, printing out details of each node (student)
         printf("ID: %d \n", temp->id); 
         printf("Name: %s \n", temp->name); 
-        printf("Enrollment Address: %p \n", (void*)temp->enrollments);
+        if(temp->enrollments!=NULL)  printf("Enrolled in: %s \n", temp->enrollments->subjectptr->name);
+        else printf("Enrolled: Not yet enrolled in any subject");
         printf("Next Address: %p \n", (void*)temp->next);
         temp = temp->next; 
         printf("\n");
@@ -63,7 +66,7 @@ struct Student* findTail(struct Student* head){ //finds linked list tail
     return temp; //returns the tail
 }
 
-void displayStudentByID(){ //retrieves user input of student ID and searches for student with this ID, before displauing their details)
+ struct Student* retrieveStudentByID(){ //retrieves user input of student ID and searches for student with this ID, before displauing their details)
 
     printf("\n==================== Find Student By ID ====================\n");
     short id;
@@ -75,28 +78,25 @@ void displayStudentByID(){ //retrieves user input of student ID and searches for
     if (result != 1) { //sanitises input - calls itself recursively until valid input (only accepts integers)
         while (getchar() != '\n');  // Read and discard characters until a newline is found
         printf("Invalid selection, please input a valid ID number.\n");
-        return displayStudentByID();
+        return retrieveStudentByID();
     }
 
     
     struct Student *temp = head;
-    short found = 0; //0 when student with matching ID not found
+    
 
-    while (temp != NULL && found==0) { //cycles through students until end of list or student found
+    while (temp != NULL) { //cycles through students until end of list or student found
         if((temp->id) == id){ //if student found
             printf("ID: %d \n", temp->id); //print details
             printf("Name: %s \n", temp->name); 
             printf("Enrollment Address: %p \n", (void*)temp->enrollments);
             printf("Next Address: %p \n", (void*)temp->next);
-            found = 1; //1 when student with matching ID found
+            return temp;
         }
         temp = temp->next; 
     }
-    if (found == 0){ //if there is not a matching ID
-        printf("Student not found, please try a different ID\n");
-        return displayStudentByID(); //calls itself again
-    }
-
+    
+    return NULL;
 }
 
 void clearInputBuffer() { //Clears input buffer to allow correct reading of string
@@ -150,5 +150,24 @@ void displayStudentByName() { //Takes user input of name and compares to name fi
         } else {
             break; // exit loop once student found by name
         }
+    }
+}
+
+void enrollStudentinSubject(){
+    printf("\n=================== Enroll a Student ===================\n");
+    printf("Input Student ID to enroll in a subject: \n");
+    struct Student* st = retrieveStudentByID();
+    if(st !=NULL){ // check if student was retrieved successfully
+        printf("Input Subject ID to set it for the student %s: \n" , st->name);
+        struct Subject* sb = retrieveSubjectByID();
+        if(sb != NULL){ // check if subject was retrieved successfully
+            enrollStudent(st,sb); // enroll student
+        }
+        else{
+            return ; // return if subject not retrieved
+        }
+    }
+    else{
+        return ; // return if student not retrieved
     }
 }

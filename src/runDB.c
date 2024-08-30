@@ -15,10 +15,10 @@ int main(void){
             int studentMenuNavigate = displayStudentMenu();
 
             if(studentMenuNavigate==1){displayAllStudents();}
-            if(studentMenuNavigate==2){addStudent();}
-            if(studentMenuNavigate==3){displayStudentByID();}
-            if(studentMenuNavigate==4){displayStudentByName();}
-            if(studentMenuNavigate==5){continue;}
+            else if(studentMenuNavigate==2) addStudent();
+            else if(studentMenuNavigate==3) retrieveStudentByID();
+            else if(studentMenuNavigate==4) displayStudentByName();
+            else if(studentMenuNavigate==5) enrollStudentinSubject();
         }
         else if (mainMenuNavigate==2){ // user selects subject menu
 
