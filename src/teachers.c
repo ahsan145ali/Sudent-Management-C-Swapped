@@ -109,35 +109,54 @@ struct Teacher* retrieveTeacherByID(){
     return NULL;
 }
 
-void displayTeacherBySubject()
+struct Teacher* retrieveTeacherBySubject()
 {
-    return;
+     printf("\n==================== Find Teacher By Subject ====================\n");
+     clearInput();
+     char *subject  = stringInput("subject name");
+     struct Teacher *temp = headTeacher;
+     while(temp != NULL){
+        if(temp->subject != NULL)
+        {
+            if(strncmp(temp->subject->name , subject, strlen(subject)) == 0){ // matched subjects
+                 printf("ID: %d \n", temp->id); 
+                 printf("Name: %s \n", temp->name); 
+                 printf("Subject : %s \n",temp->subject->name);
+                 printf("Next Address: %p \n", (void*)temp->next);
+                 return temp;
+            }
+        }
+        temp = temp->next;
+     }
+     printf("No Teacher with subject %s \n" , subject);
+     return NULL;
+
 }
 
 void addTeacherSubject(){
     printf("Input Teacher ID to set subject for that teacher: \n");
-    struct Teacher* te = retrieveTeacherByID();
-    if(te != NULL)
+    struct Teacher* te = retrieveTeacherByID(); // gets teacher by id
+    if(te != NULL) // check if teacher was retrieved successfully
     {
          printf("Input Subject ID to set it for the teacher %s: \n" , te->name);
-         struct Subject *sb = retrieveSubjectByID();
-         if(sb != NULL){
-            te->subject = sb;
-            if(te->subject !=NULL){
+         struct Subject *sb = retrieveSubjectByID(); // get subject by ID
+         if(sb != NULL){ // checks if subject was retrived successfully
+            te->subject = sb; // sets retrieved teachers subject to retrieved subject
+            if(te->subject !=NULL){ // checks if subject was assigned successfully
                 printf("Subject for teacher %s set to %s \n" , te->name , sb->name);
-                sb->subjectTeacher = te;
+                sb->subjectTeacher = te; // set retrieved subject teacher to retrieved teacher
             }
             else{
                 printf("Could not set the subject \n");
-                return;
+                return; // return if subject is not assigned to teacher
             }
          }
          else{
-            return;
+            return; // return if subject is not retrieved
          }
     }   
     else{
-        return;
+        return; // return if teacher is not retrieved
     }
     
 }

@@ -34,7 +34,7 @@ int main(void){
            if(teacherMenuNavigate==1) displayAllTeachers();
            else if(teacherMenuNavigate == 2) addTeacher();
            else if(teacherMenuNavigate == 3) retrieveTeacherByID();
-           else if(teacherMenuNavigate == 4) displayTeacherBySubject();
+           else if(teacherMenuNavigate == 4) retrieveTeacherBySubject();
            else if(teacherMenuNavigate == 5) addTeacherSubject();
         }
         else if (mainMenuNavigate==6){

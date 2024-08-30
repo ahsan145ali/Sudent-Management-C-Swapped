@@ -31,8 +31,11 @@ short findTeacherAvailID();
 /// @return returns the found teacher else returns NULL
 struct Teacher* retrieveTeacherByID();
 
-void displayTeacherBySubject();
+/// @brief Finds and displays teacher based on subject
+/// @return returs the teacher if found else returns null
+struct Teacher* retrieveTeacherBySubject();
 
+/// @brief gets subject and teacher by id and sets the teacher subject and subhject teacher
 void addTeacherSubject();
 
 #endif
