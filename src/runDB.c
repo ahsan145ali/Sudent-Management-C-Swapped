@@ -25,7 +25,7 @@ int main(void){
            int subjectMenuNavigate = displaySubjectMenu();
            if(subjectMenuNavigate==1) displayAllSubjects();
            else if(subjectMenuNavigate == 2) addSubject();
-           else if(subjectMenuNavigate == 3) displaySubjectByID();
+           else if(subjectMenuNavigate == 3) retrieveSubjectByID();
            else if(subjectMenuNavigate == 4) displaySubjectByName();
         }
         else if(mainMenuNavigate == 3){ // user selects teacher menu
@@ -33,8 +33,9 @@ int main(void){
            
            if(teacherMenuNavigate==1) displayAllTeachers();
            else if(teacherMenuNavigate == 2) addTeacher();
-           else if(teacherMenuNavigate == 3) displayTeacherByID();
+           else if(teacherMenuNavigate == 3) retrieveTeacherByID();
            else if(teacherMenuNavigate == 4) displayTeacherBySubject();
+           else if(teacherMenuNavigate == 5) addTeacherSubject();
         }
         else if (mainMenuNavigate==6){
             printf("\n================= Closing School DB System =================\n");

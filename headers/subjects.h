@@ -29,7 +29,8 @@ struct Subject* createSubject(short id, char* name);
 short findSubjectrAvailID();
 
 /// @brief Finds and displays Subject by ID
-void displaySubjectByID();
+/// @return returns the found subject else returns NULL
+struct Subject* retrieveSubjectByID();
 
 /// @brief Finds ands displays subject by Name
 void displaySubjectByName();

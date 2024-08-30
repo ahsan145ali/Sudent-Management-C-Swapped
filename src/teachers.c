@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "Utils.h"
+#include "subjects.h"
 
 
 struct Teacher* headTeacher = NULL; // Maintains the head of the link list
@@ -19,7 +20,8 @@ void displayAllTeachers(){
     while (temp != NULL) { //iterates through linked list, printing out details of each node 
         printf("ID: %d \n", temp->id); 
         printf("Name: %s \n", temp->name); 
-        printf("Subjects Address: %p \n", (void*)temp->subject);
+        if(temp->subject != NULL) printf("Subject : %s \n",temp->subject->name);
+        else printf("Subject: NOT ASSIGNED \n");
         printf("Next Address: %p \n", (void*)temp->next);
         temp = temp->next; 
         printf("\n");
@@ -77,7 +79,7 @@ short findTeacherAvailID(){ //finds the next available ID (auto increment)
     return newID; //returns the newID
 }
 
-void displayTeacherByID(){
+struct Teacher* retrieveTeacherByID(){
     printf("\n==================== Find Teacher By ID ====================\n");
     short id;
     int result;
@@ -88,7 +90,7 @@ void displayTeacherByID(){
     if (result != 1) { //sanitises input - calls itself recursively until valid input (only accepts integers)
         while (getchar() != '\n');  // Read and discard characters until a newline is found
         printf("Invalid selection, please input a valid ID number.\n");
-        return displayTeacherByID();
+        return retrieveTeacherByID();
     }
 
     struct Teacher *temp = headTeacher;
@@ -99,14 +101,43 @@ void displayTeacherByID(){
             printf("Name: %s \n", temp->name); 
             printf("Enrollment Address: %p \n", (void*)temp->subject);
             printf("Next Address: %p \n", (void*)temp->next);
-            return;
+            return temp;
         }
         temp = temp->next; 
     }
     printf("Teacher with ID: %hd not found \n" , id);
+    return NULL;
 }
 
 void displayTeacherBySubject()
 {
     return;
+}
+
+void addTeacherSubject(){
+    printf("Input Teacher ID to set subject for that teacher: \n");
+    struct Teacher* te = retrieveTeacherByID();
+    if(te != NULL)
+    {
+         printf("Input Subject ID to set it for the teacher %s: \n" , te->name);
+         struct Subject *sb = retrieveSubjectByID();
+         if(sb != NULL){
+            te->subject = sb;
+            if(te->subject !=NULL){
+                printf("Subject for teacher %s set to %s \n" , te->name , sb->name);
+                sb->subjectTeacher = te;
+            }
+            else{
+                printf("Could not set the subject \n");
+                return;
+            }
+         }
+         else{
+            return;
+         }
+    }   
+    else{
+        return;
+    }
+    
 }

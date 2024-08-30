@@ -28,8 +28,11 @@ struct Teacher* createTeacher(short id, char* name);
 short findTeacherAvailID();
 
 /// @brief Finds and displays teacher by ID
-void displayTeacherByID();
+/// @return returns the found teacher else returns NULL
+struct Teacher* retrieveTeacherByID();
 
 void displayTeacherBySubject();
+
+void addTeacherSubject();
 
 #endif

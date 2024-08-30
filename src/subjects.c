@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "Utils.h"
+#include "teachers.h"
 
 struct Subject* headSubject = NULL; // Maintains the head of the link list
 struct Subject* tailSubject = NULL; // Maintains the tail of the link list
@@ -20,7 +21,8 @@ void displayAllSubjects(){
     while (temp != NULL) { //iterates through linked list, printing out details of each node 
         printf("ID: %d \n", temp->id); 
         printf("Name: %s \n", temp->name); 
-        printf("Teacher Address: %p \n", (void*)temp->subjectTeacher);
+        if(temp->subjectTeacher != NULL)  printf("Teacher: %s \n", temp->subjectTeacher->name);
+        else printf("Teacher: NOT ASSIGNED \n");
         printf("Enrollment Address: %p \n", (void*)temp->enrollments);
         printf("Next Address: %p \n", (void*)temp->next);
         temp = temp->next; 
@@ -81,7 +83,7 @@ short findSubjectrAvailID(){
     return newID; //returns the newID
 }
 
-void displaySubjectByID(){
+struct Subject* retrieveSubjectByID(){
     printf("\n==================== Find Subject By ID ====================\n");
     short id;
     int result;
@@ -92,7 +94,7 @@ void displaySubjectByID(){
     if (result != 1) { //sanitises input - calls itself recursively until valid input (only accepts integers)
         while (getchar() != '\n');  // Read and discard characters until a newline is found
         printf("Invalid selection, please input a valid ID number.\n");
-        return displaySubjectByID();
+        return retrieveSubjectByID();
     }
 
     struct Subject *temp = headSubject;
@@ -104,11 +106,12 @@ void displaySubjectByID(){
             printf("Teacher Address: %p \n", (void*)temp->subjectTeacher);
             printf("Enrollment Address: %p \n", (void*)temp->enrollments);
             printf("Next Address: %p \n", (void*)temp->next);
-            return;
+            return temp;
         }
         temp = temp->next; 
     }
     printf("Subject with ID: %hd not found \n" , id);
+    return NULL;
 }
 
 void displaySubjectByName(){

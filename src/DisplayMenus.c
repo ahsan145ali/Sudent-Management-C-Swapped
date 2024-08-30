@@ -109,7 +109,8 @@ int displayTeacherMenu(){
         printf("2. Add Teacher\n");
         printf("3. Retrieve Teacher data by ID\n");
         printf("4. Retrieve Teacher by Subject\n");
-        printf("5. Return to Main Menu\n");
+        printf("5. Add Teacher Subject\n");
+        printf("6. Return to Main Menu\n");
         printf("\nChoice: ");
 
        result = scanf("%d", &choice);
@@ -119,7 +120,7 @@ int displayTeacherMenu(){
             return displayTeacherMenu();
         }
 
-        if (choice>5 || choice<1){//outside of range
+        if (choice>6 || choice<1){//outside of range
             printf("Invalid selection.\n");
             return displayTeacherMenu();
         }else{
