@@ -1,11 +1,13 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include "DisplayMenus.h"
 #include "students.h"
 #include "teachers.h"
 #include "subjects.h"
 
 int main(void){
-        
+    if(readSubjectFromFile() == EXIT_FAILURE) printf("failed to read subjects from file \n");
+    if(readTeacherFromFile() == EXIT_FAILURE) printf("failed to read teachers from file \n");
     while(1){ //menu loop (runs until the user quits)
     
     int mainMenuNavigate= displayMainMenu(); //only returns a valid choice

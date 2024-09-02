@@ -36,48 +36,61 @@ void displayAllTeachers(){
 }
   
 void addTeacher(){ //Retrieves user input on new student and calls createStudent()
-    printf("\n====================== Create Student ======================\n");
+    printf("\n====================== Create Teacher ======================\n");
     printf("\n");
     short id = 0;
     if(headTeacher == NULL){
-        struct Teacher* ptr = malloc(sizeof(struct Teacher));
         id = 1;
-        clearInput();
-        char* name = stringInput("Name"); // gets input from user and allocates size to store the user name
-        printf("New Teacher created.\n");
-        printf("\n");
-        ptr->id = id;
-        ptr->name = malloc(strlen(name) * sizeof(char));
-        strncpy(ptr->name , name , strlen(name));
-        ptr->next = NULL;
-        ptr->subject = NULL;
-        headTeacher = ptr;
-        tailTeacher = ptr;
     }
     else{
         id = findTeacherAvailID(); // finds the ID of the next created student.
-        clearInput();
-        char* name = stringInput("Name"); // gets input from user and allocates size to store the user name
-        printf("New Teacher created.\n");
-        printf("\n");
-        struct Teacher* newTeacher = createTeacher(id,name); //pointer stored in newStudent variable (not used at the moment)
     }
+    clearInput();
+    char* name = stringInput("Name"); // gets input from user and allocates size to store the user name
+    printf("New Teacher created.\n");
+    printf("\n");
+    struct Teacher* newTeacher = createTeacher(id,name); //pointer stored in newStudent variable (not used at the moment)
+
+    if(newTeacher != NULL)
+     {
+         printf("New subject created.\n");
+         printf("\n");
+     }
+     else{
+        printf("Subject creation failed");
+        return;
+     }
+
 }
 
 struct Teacher* createTeacher(short id, char* name){ // creates new student and appends to linked list
-    //struct Teacher* tail = findTeacherTail(headTeacher); //stores tail so that previous tail'next' address can be added
     struct Teacher* newTeacher = malloc(sizeof(struct Teacher));
-    tailTeacher->next = newTeacher;
-    
+    if(newTeacher == NULL){
+        printf("Memory Allocation Failed \n");
+        exit(EXIT_FAILURE);
+    }  
     newTeacher->id = id;
 
     newTeacher->name = malloc(strlen(name) + 1); //this ensures that persistent memory is assigned to the name
-    strcpy(newTeacher->name, name); //and copies it into this memory
+    if(newTeacher->name == NULL)
+    {
+        printf("Memory allocation to name failed\n");
+        exit(EXIT_FAILURE);
+    }
+    strncpy(newTeacher->name, name,strlen(name)); //and copies it into this memory
 
     newTeacher->subject = NULL; //new teacher does not have any subject yet
     newTeacher->next = NULL; //next is null to signify end of the list
 
+    if(headTeacher == NULL)
+    {
+        headTeacher = newTeacher;
+        tailTeacher = newTeacher;
+    }
+    else{
+    tailTeacher->next = newTeacher;
     tailTeacher = newTeacher; // set tail to new added node as it is the last
+    }
     return newTeacher;
 }//use malloc here
 
@@ -180,4 +193,25 @@ void addTeacherSubject(){
         return; // return if teacher is not retrieved
     }
     
+}
+
+int readTeacherFromFile(){
+    FILE* fptr = fopen("teachers.txt","r");
+    if(fptr == NULL)
+    {
+        printf("Failed to open file \n");
+        return EXIT_FAILURE;
+    }
+    short id;
+    char name[256];
+
+    // Read data from the file
+    while (fscanf(fptr, "%hd,%255[^\n]%*c", &id, name) == 2) {
+         struct Teacher* newTeacher = createTeacher(id, name);
+         if (newTeacher == NULL) {
+             printf("Subject Creation Failed");
+             return EXIT_FAILURE;
+         }
+    }
+    return EXIT_SUCCESS;
 }

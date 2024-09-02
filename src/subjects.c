@@ -37,46 +37,57 @@ void addSubject(){
     printf("\n");
     short id = 0;
     if(headSubject == NULL){
-        struct Subject* ptr = malloc(sizeof(struct Subject));
         id = 1;
-        clearInput();
-        char* name = stringInput("subject"); // gets input from user and allocates size to store the user name
-        printf("New Subject created.\n");
-        printf("\n");
-        ptr->id = id;
-        ptr->name = malloc(strlen(name) * sizeof(char));
-        strncpy(ptr->name , name , strlen(name));
-        ptr->subjectTeacher = NULL;
-        ptr->next = NULL;
-        ptr->enrollments = NULL;
-        headSubject = ptr;
-        tailSubject = ptr;
     }
-    else{
+    else
+    {
         id = findSubjectrAvailID(); // finds the ID of the next created student.
-        clearInput();
-        char* name = stringInput("subject"); // gets input from user and allocates size to store the user name
-        printf("New subject created.\n");
-        printf("\n");
-        struct Subject* newSubject = createSubject(id,name); //pointer stored in newStudent variable (not used at the moment)
     }
+     clearInput();
+     char* name = stringInput("subject"); // gets input from user and allocates size to store the user name
+     struct Subject* newSubject = createSubject(id,name); //pointer stored in newStudent variable
+     if(newSubject != NULL)
+     {
+         printf("New subject created.\n");
+         printf("\n");
+     }
+     else{
+        printf("Subject creation failed");
+        return;
+     }
+
 }
 
 
 struct Subject* createSubject(short id, char* name){
     struct Subject* newSubject = malloc(sizeof(struct Subject));
-    tailSubject->next = newSubject;
-    
+    if(newSubject == NULL){
+        printf("Memory Allocation Failed \n");
+        exit(EXIT_FAILURE);
+    }    
     newSubject->id = id;
 
     newSubject->name = malloc(strlen(name) + 1); //this ensures that persistent memory is assigned to the name
-    strcpy(newSubject->name, name); //and copies it into this memory
+    if(newSubject->name == NULL)
+    {
+        printf("Memory allocation to name failed\n");
+        exit(EXIT_FAILURE);
+    }
+    strncpy(newSubject->name, name, strlen(name)); //and copies it into this memory
 
     newSubject->subjectTeacher = NULL;
     newSubject->enrollments = NULL; //new subject do es not habe any enrollment in anything
     newSubject->next = NULL; // next is null to signify end of the list
 
+    if(headSubject == NULL)
+    {
+        headSubject = newSubject;
+        tailSubject = newSubject;
+    }
+    else{
+    tailSubject->next = newSubject;
     tailSubject = newSubject; // set tail to new added node as it is the last
+    }
     return newSubject;
 }
 
@@ -145,4 +156,25 @@ void displaySubjectByName(){
         printf("Subject with name %s not found \n" , name);
     
     
+}
+
+int readSubjectFromFile(){
+    FILE* fptr = fopen("subjects.txt","r");
+    if(fptr == NULL)
+    {
+        printf("Failed to open file \n");
+        return EXIT_FAILURE;
+    }
+    short id;
+    char name[256];
+
+    // Read data from the file
+    while (fscanf(fptr, "%hd,%255[^\n]%*c", &id, name) == 2) {
+         struct Subject* newSubject = createSubject(id, name);
+         if (newSubject == NULL) {
+             printf("Subject Creation Failed");
+             return EXIT_FAILURE;
+         }
+    }
+    return EXIT_SUCCESS;
 }
