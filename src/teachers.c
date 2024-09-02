@@ -14,16 +14,17 @@ void displayAllTeachers(){
     printf("\n=================== Display All Teachers ===================\n");
     printf("\n");
     struct Teacher *temp = headTeacher;
-    if(temp == NULL){
+    if(temp == NULL){ // checks if list is empty
         printf("No Teacher \n");
         return;
     }
     while (temp != NULL) { //iterates through linked list, printing out details of each node 
         printf("ID: %d \n", temp->id); 
         printf("Name: %s \n", temp->name); 
-        if(temp->subject != NULL) 
+        if(temp->subject != NULL)  // check if teacher has assigned subject
         {
             printf("Subject : %s \n",temp->subject->name);
+            // If there are enrollments, display the student's name
             if(temp->subject->enrollments != NULL && temp->subject->enrollments->studentptr != NULL)
             {
                 printf("Teaching to : %s \n",temp->subject->enrollments->studentptr->name);
@@ -40,24 +41,23 @@ void addTeacher(){ //Retrieves user input on new student and calls createStudent
     printf("\n");
     short id = 0;
     if(headTeacher == NULL){
-        id = 1;
+        id = 1; // If this is the first teacher, assign ID 1
     }
     else{
         id = findTeacherAvailID(); // finds the ID of the next created student.
     }
     clearInput();
     char* name = stringInput("Name"); // gets input from user and allocates size to store the user name
-    printf("New Teacher created.\n");
-    printf("\n");
-    struct Teacher* newTeacher = createTeacher(id,name); //pointer stored in newStudent variable (not used at the moment)
+    struct Teacher* newTeacher = createTeacher(id,name); //create a new teacher based on the input provided
 
+    free(name); // Free the memory allocated for the name input
     if(newTeacher != NULL)
      {
-         printf("New subject created.\n");
+         printf("New Teacher created.\n");
          printf("\n");
      }
      else{
-        printf("Subject creation failed");
+        printf("Teacher creation failed");
         return;
      }
 
@@ -103,23 +103,27 @@ struct Teacher* retrieveTeacherByID(){
     printf("\n==================== Find Teacher By ID ====================\n");
     short id;
     int result;
-    printf("\nEnter Teacher ID:");
-    result = scanf("%hd",&id); 
-    printf("\n");
 
-    if (result != 1) { //sanitises input - calls itself recursively until valid input (only accepts integers)
-        while (getchar() != '\n');  // Read and discard characters until a newline is found
-        printf("Invalid selection, please input a valid ID number.\n");
-        return retrieveTeacherByID();
+    while (1) {
+        printf("\nEnter Teacher ID:");
+        result = scanf("%hd", &id); // get id from user input
+        printf("\n");
+
+        if (result == 1) { 
+            break; // break loop if valid input was entered
+        } else {
+            clearInput();
+            printf("Invalid selection, please input a valid ID number.\n");
+        }
     }
-
+   
     struct Teacher *temp = headTeacher;
 
      while (temp != NULL) { //cycles through teachers until end of list or teacher found
         if((temp->id) == id){ //if teacher found
             printf("ID: %d \n", temp->id); 
             printf("Name: %s \n", temp->name); 
-           if(temp->subject != NULL) 
+           if(temp->subject != NULL)  // check if teacher has subject
             {
                 printf("Subject : %s \n",temp->subject->name);
                     if(temp->subject->enrollments != NULL && temp->subject->enrollments->studentptr != NULL)
@@ -140,7 +144,7 @@ struct Teacher* retrieveTeacherBySubject()
 {
      printf("\n==================== Find Teacher By Subject ====================\n");
      clearInput();
-     char *subject  = stringInput("subject name");
+     char *subject  = stringInput("subject name"); // get subject name from user input
      struct Teacher *temp = headTeacher;
      while(temp != NULL){
         if(temp->subject != NULL)
@@ -196,8 +200,8 @@ void addTeacherSubject(){
 }
 
 int readTeacherFromFile(){
-    FILE* fptr = fopen("teachers.txt","r");
-    if(fptr == NULL)
+    FILE* fptr = fopen("teachers.txt","r"); // open file in read mode
+    if(fptr == NULL) // check if file was not opened
     {
         printf("Failed to open file \n");
         return EXIT_FAILURE;
@@ -206,12 +210,37 @@ int readTeacherFromFile(){
     char name[256];
 
     // Read data from the file
-    while (fscanf(fptr, "%hd,%255[^\n]%*c", &id, name) == 2) {
-         struct Teacher* newTeacher = createTeacher(id, name);
+    while (fscanf(fptr, "%hd,%255[^\n]%*c", &id, name) == 2) { 
+         struct Teacher* newTeacher = createTeacher(id, name); // create new teacher based on data from file
          if (newTeacher == NULL) {
-             printf("Subject Creation Failed");
+             printf("Teacher Creation Failed");
+             fclose(fptr); // close the file
              return EXIT_FAILURE;
          }
     }
+    fclose(fptr); // close file
     return EXIT_SUCCESS;
+}
+
+void freeTeachers() {
+    struct Teacher* current = headTeacher;
+    struct Teacher* nextTeacher = NULL;
+
+    while (current != NULL) {
+        nextTeacher = current->next; // set next teacher
+        
+        // Free the allocated memory for the name
+        if (current->name != NULL) {
+            free(current->name); // free current name
+        }
+
+        // Free the Teacher structure
+        free(current);
+        
+        current = nextTeacher;
+    }
+
+    // Reset the head and tail pointers
+    headTeacher = NULL;
+    tailTeacher = NULL;
 }

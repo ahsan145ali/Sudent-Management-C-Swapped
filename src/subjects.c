@@ -159,8 +159,8 @@ void displaySubjectByName(){
 }
 
 int readSubjectFromFile(){
-    FILE* fptr = fopen("subjects.txt","r");
-    if(fptr == NULL)
+    FILE* fptr = fopen("subjects.txt","r"); // open file in read mode
+    if(fptr == NULL) // check if file was not opened
     {
         printf("Failed to open file \n");
         return EXIT_FAILURE;
@@ -170,11 +170,38 @@ int readSubjectFromFile(){
 
     // Read data from the file
     while (fscanf(fptr, "%hd,%255[^\n]%*c", &id, name) == 2) {
-         struct Subject* newSubject = createSubject(id, name);
+         struct Subject* newSubject = createSubject(id, name);// create new subject based on data from file
          if (newSubject == NULL) {
              printf("Subject Creation Failed");
+             fclose(fptr);
              return EXIT_FAILURE;
          }
     }
+    fclose(fptr);
     return EXIT_SUCCESS;
+}
+
+void freeSubjects() {
+    struct Subject* current = headSubject;
+    struct Subject* nextSubject = NULL;
+
+    while (current != NULL) {
+        nextSubject = current->next; // set next Subject
+        
+        // Free the allocated memory for the name
+        if (current->name != NULL) {
+            free(current->name); // free current name
+        }
+
+    
+
+        // Free the Subject structure
+        free(current);
+        
+        current = nextSubject;
+    }
+
+    // Reset the head and tail pointers
+    headSubject = NULL;
+    tailSubject = NULL;
 }

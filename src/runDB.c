@@ -4,10 +4,11 @@
 #include "students.h"
 #include "teachers.h"
 #include "subjects.h"
-
+#include "enrollments.h"
 int main(void){
     if(readSubjectFromFile() == EXIT_FAILURE) printf("failed to read subjects from file \n");
     if(readTeacherFromFile() == EXIT_FAILURE) printf("failed to read teachers from file \n");
+    if(readStudentFromFile() == EXIT_FAILURE) printf("failed to read students from file \n");
     while(1){ //menu loop (runs until the user quits)
     
     int mainMenuNavigate= displayMainMenu(); //only returns a valid choice
@@ -46,8 +47,9 @@ int main(void){
             }
 
     }
-
-
+    freeTeachers();
+    freeSubjects();
+    freeStudents();
     return 0;
 }
 

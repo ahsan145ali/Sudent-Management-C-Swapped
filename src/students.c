@@ -6,14 +6,14 @@
 #include "subjects.h"
 #include "enrollments.h"
 #include "teachers.h"
-struct Student firstStudent = {1, "Samuel Elliott", NULL, NULL}; //Creates first student
-struct Student* head = &firstStudent; //sets first student address to be head of linked list.
 
+struct Student* headStudent = NULL; // Maintains the head of the link list
+struct Student* tailStudent = NULL; // Maintains the tail of the link list
 
 void displayAllStudents() { //Displays information of all students
     printf("\n=================== Display All Students ===================\n");
     printf("\n");
-    struct Student *temp = head;
+    struct Student *temp = headStudent;
     while (temp != NULL) { //iterates through linked list, printing out details of each node (student)
         printf("ID: %d \n", temp->id); 
         printf("Name: %s \n", temp->name); 
@@ -34,44 +34,62 @@ void displayAllStudents() { //Displays information of all students
 void addStudent(){ //Retrieves user input on new student and calls createStudent()
     printf("\n====================== Create Student ======================\n");
     printf("\n");
-    short id = findAvailID(head); // finds the ID of the next created student.
+     short id = 0;
+    if(headStudent == NULL){
+        id = 1; // If this is the first student, assign ID 1
+    }
+    else{
+        id = findAvailID(); // finds the ID of the next created student.
+    }
     clearInput();
     char* name = stringInput("Name"); // gets input from user and allocates size to store the user name
-    printf("New student created.\n");
-    printf("\n");
     struct Student* newStudent = createStudent(id,name); //pointer stored in newStudent variable (not used at the moment)
+    free(name); // Free the memory allocated for the name input
+    if(newStudent != NULL)
+     {
+         printf("New Student created.\n");
+         printf("\n");
+     }
+     else{
+        printf("Student creation failed");
+        return;
+     }
+
 }
 
-short findAvailID(struct Student* head){ //finds the next available ID (auto increment)
-    struct Student* tail = findTail(head); //calls get tail to find previous tail of linked list
-    short newID = (tail->id)+1; //adds one to tail ID to find newID
+short findAvailID(){ //finds the next available ID (auto increment)
+    short newID = (tailStudent->id)+1; //adds one to tail ID to find newID
     return newID; //returns the newID
 }
 
 struct Student* createStudent(short id, char* name){ // creates new student and appends to linked list
-    struct Student* tail = findTail(head); //stores tail so that previous tail'next' address can be added
     struct Student* newStudent = malloc(sizeof(struct Student));
-    tail->next = newStudent;
+   if(newStudent == NULL){
+        printf("Memory Allocation Failed \n");
+        exit(EXIT_FAILURE);
+    }  
     
     newStudent->id = id;
 
     newStudent->name = malloc(strlen(name) + 1); //this ensures that persistent memory is assigned to the name
-    strcpy(newStudent->name, name); //and copies it into this memory
+    strncpy(newStudent->name, name,strlen(name)); //and copies it into this memory
 
     newStudent->enrollments = NULL; //new students are not enrolled in anything
 
     newStudent->next = NULL; //this node becomes the tail
+    if(headStudent == NULL)
+    {
+        headStudent = newStudent;
+        tailStudent = newStudent;
+    }
+    else{
+    tailStudent->next = newStudent;
+    tailStudent = newStudent;
+    }
 
     return newStudent;
 }//use malloc here
 
-struct Student* findTail(struct Student* head){ //finds linked list tail
-    struct Student *temp = head;
-    while ((temp->next) != NULL){ // searches for linked list node with next = NULl and deduces this is the tail
-        temp = temp -> next;
-    }
-    return temp; //returns the tail
-}
 
  struct Student* retrieveStudentByID(){ //retrieves user input of student ID and searches for student with this ID, before displauing their details)
 
@@ -89,7 +107,7 @@ struct Student* findTail(struct Student* head){ //finds linked list tail
     }
 
     
-    struct Student *temp = head;
+    struct Student *temp = headStudent;
     
 
     while (temp != NULL) { //cycles through students until end of list or student found
@@ -144,7 +162,7 @@ void displayStudentByName() { //Takes user input of name and compares to name fi
         }
 
         // Once valid string has been input, search linked list
-        struct Student* temp = head;
+        struct Student* temp = headStudent;
 
         while (temp != NULL) { 
             if (strcmp(temp->name, name) == 0) { // strcomp compares the input string to the name field of student struct
@@ -216,4 +234,51 @@ void assignGrade(){
     {
         return; // return if student not retrieved
     }
+}
+
+int readStudentFromFile(){
+    FILE* fptr = fopen("students.txt","r"); // open file in read mode
+    if(fptr == NULL) // check if file was not opened
+    {
+        printf("Failed to open file \n");
+        return EXIT_FAILURE;
+    }
+    short id;
+    char name[256];
+
+    // Read data from the file
+    while (fscanf(fptr, "%hd,%255[^\n]%*c", &id, name) == 2) { 
+         struct Student* newStudent = createStudent(id, name); // create new student based on data from file
+         if (newStudent == NULL) {
+             printf("Student Creation Failed");
+             fclose(fptr); // close the file
+             return EXIT_FAILURE;
+         }
+    }
+    fclose(fptr); // close file
+    return EXIT_SUCCESS;
+}
+
+void freeStudents() {
+    struct Student* current = headStudent;
+    struct Student* nextStudent = NULL;
+
+    while (current != NULL) {
+        nextStudent = current->next; // set next student
+        
+        // Free the allocated memory for the name
+        if (current->name != NULL) {
+            free(current->name); // free current name
+        }
+
+       
+        // Free the student structure
+        free(current);
+        
+        current = nextStudent;
+    }
+
+    // Reset the head and tail pointers
+    headStudent = NULL;
+    tailStudent = NULL;
 }
