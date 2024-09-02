@@ -10,9 +10,7 @@ int displayMainMenu(){
         printf("1. Student operations\n");
         printf("2. Subject operations\n");
         printf("3. Teacher operations\n");
-        printf("4. Grade operations\n");
-        printf("5. Load data\n");
-        printf("6. Quit\n\n");
+        printf("4. Quit\n\n");
         printf("Choice:");
         result = scanf("%d", &choice); //main menu formatting+input sanitising
 
@@ -22,7 +20,7 @@ int displayMainMenu(){
             printf("\nInvalid selection, please select a valid option.\n");
             return displayMainMenu(); 
         }
-        if (choice>6 || choice<1){ //when input is outside of the required range
+        if (choice>4 || choice<1){ //when input is outside of the required range
             printf("\nInvalid selection, please select a valid option.\n");
             return displayMainMenu();
         }else{

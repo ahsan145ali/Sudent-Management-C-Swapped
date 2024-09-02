@@ -35,5 +35,10 @@ struct Subject* retrieveSubjectByID();
 /// @brief Finds ands displays subject by Name
 void displaySubjectByName();
 
+/// @brief reads subjects from file and stores them in link list
+/// @return returns 1 if failed and 0 if success
+int readSubjectFromFile();
 
+/// @brief free memory allocated
+void freeSubjects();
 #endif

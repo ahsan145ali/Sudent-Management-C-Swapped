@@ -38,4 +38,10 @@ struct Teacher* retrieveTeacherBySubject();
 /// @brief gets subject and teacher by id and sets the teacher subject and subhject teacher
 void addTeacherSubject();
 
+/// @brief reads teacher from file and stores them in link list
+/// @return returns 1 if failed and 0 if success
+int readTeacherFromFile();
+
+/// @brief free memory allocated
+void freeTeachers();
 #endif
