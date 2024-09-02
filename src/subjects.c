@@ -103,11 +103,13 @@ struct Subject* retrieveSubjectByID(){
 
      while (temp != NULL) { //cycles through subjects until end of list or subject found
         if((temp->id) == id){ //if teacher found
-            printf("ID: %d \n", temp->id); //print details
+            printf("ID: %d \n", temp->id); 
             printf("Name: %s \n", temp->name); 
-            printf("Teacher Address: %p \n", (void*)temp->subjectTeacher);
-            printf("Enrollment Address: %p \n", (void*)temp->enrollments);
-            printf("Next Address: %p \n", (void*)temp->next);
+            if(temp->subjectTeacher != NULL)  printf("Teacher: %s \n", temp->subjectTeacher->name);
+            else printf("Teacher: NOT ASSIGNED \n");
+            if(temp->enrollments != NULL)  printf("Enrolled Student: %s \n", temp->enrollments->studentptr->name);
+            else printf("Enrolled: No student enrolled yet \n");
+            printf("\n");
             return temp;
         }
         temp = temp->next; 
@@ -129,10 +131,13 @@ void displaySubjectByName(){
 
         while (temp != NULL) { 
             if (strcmp(temp->name, name) == 0) { // strcomp compares the input string to the name field of student struct
-                printf("ID: %d \n", temp->id);
-                printf("Name: %s \n", temp->name);
-                printf("Enrollment Address: %p \n", (void*)temp->enrollments);
-                printf("Next Address: %p \n\n", (void*)temp->next);
+                printf("ID: %d \n", temp->id); 
+                printf("Name: %s \n", temp->name); 
+                if(temp->subjectTeacher != NULL)  printf("Teacher: %s \n", temp->subjectTeacher->name);
+                else printf("Teacher: NOT ASSIGNED \n");
+                if(temp->enrollments != NULL)  printf("Enrolled Student: %s \n", temp->enrollments->studentptr->name);
+                else printf("Enrolled: No student enrolled yet \n");
+                printf("\n");
                 return;
             }
             temp = temp->next;

@@ -4,7 +4,8 @@
 #include <string.h>
 #include "Utils.h"
 #include "subjects.h"
-
+#include "enrollments.h"
+#include "students.h"
 
 struct Teacher* headTeacher = NULL; // Maintains the head of the link list
 struct Teacher* tailTeacher = NULL; // Maintains the tail of the link list
@@ -20,9 +21,15 @@ void displayAllTeachers(){
     while (temp != NULL) { //iterates through linked list, printing out details of each node 
         printf("ID: %d \n", temp->id); 
         printf("Name: %s \n", temp->name); 
-        if(temp->subject != NULL) printf("Subject : %s \n",temp->subject->name);
+        if(temp->subject != NULL) 
+        {
+            printf("Subject : %s \n",temp->subject->name);
+            if(temp->subject->enrollments != NULL && temp->subject->enrollments->studentptr != NULL)
+            {
+                printf("Teaching to : %s \n",temp->subject->enrollments->studentptr->name);
+            }
+        }
         else printf("Subject: NOT ASSIGNED \n");
-        printf("Next Address: %p \n", (void*)temp->next);
         temp = temp->next; 
         printf("\n");
     }
@@ -97,10 +104,17 @@ struct Teacher* retrieveTeacherByID(){
 
      while (temp != NULL) { //cycles through teachers until end of list or teacher found
         if((temp->id) == id){ //if teacher found
-            printf("ID: %d \n", temp->id); //print details
+            printf("ID: %d \n", temp->id); 
             printf("Name: %s \n", temp->name); 
-            printf("Enrollment Address: %p \n", (void*)temp->subject);
-            printf("Next Address: %p \n", (void*)temp->next);
+           if(temp->subject != NULL) 
+            {
+                printf("Subject : %s \n",temp->subject->name);
+                    if(temp->subject->enrollments != NULL && temp->subject->enrollments->studentptr != NULL)
+                    {
+                        printf("Teaching to : %s \n",temp->subject->enrollments->studentptr->name);
+                    }
+            }
+            else printf("Subject: NOT ASSIGNED \n");
             return temp;
         }
         temp = temp->next; 
@@ -119,11 +133,18 @@ struct Teacher* retrieveTeacherBySubject()
         if(temp->subject != NULL)
         {
             if(strncmp(temp->subject->name , subject, strlen(subject)) == 0){ // matched subjects
-                 printf("ID: %d \n", temp->id); 
-                 printf("Name: %s \n", temp->name); 
-                 printf("Subject : %s \n",temp->subject->name);
-                 printf("Next Address: %p \n", (void*)temp->next);
-                 return temp;
+                printf("ID: %d \n", temp->id); 
+                printf("Name: %s \n", temp->name); 
+                if(temp->subject != NULL) 
+                {
+                    printf("Subject : %s \n",temp->subject->name);
+                        if(temp->subject->enrollments != NULL && temp->subject->enrollments->studentptr != NULL)
+                        {
+                            printf("Teaching to : %s \n",temp->subject->enrollments->studentptr->name);
+                        }
+                }
+                else printf("Subject: NOT ASSIGNED \n");
+                return temp;
             }
         }
         temp = temp->next;

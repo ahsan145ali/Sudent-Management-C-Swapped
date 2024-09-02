@@ -5,6 +5,7 @@
 #include "Utils.h"
 #include "subjects.h"
 #include "enrollments.h"
+#include "teachers.h"
 struct Student firstStudent = {1, "Samuel Elliott", NULL, NULL}; //Creates first student
 struct Student* head = &firstStudent; //sets first student address to be head of linked list.
 
@@ -16,9 +17,15 @@ void displayAllStudents() { //Displays information of all students
     while (temp != NULL) { //iterates through linked list, printing out details of each node (student)
         printf("ID: %d \n", temp->id); 
         printf("Name: %s \n", temp->name); 
-        if(temp->enrollments!=NULL)  printf("Enrolled in: %s \nGrade: %c \n", temp->enrollments->subjectptr->name , temp->enrollments->grade);
-        else printf("Enrolled: Not yet enrolled in any subject");
-        printf("Next Address: %p \n", (void*)temp->next);
+        if(temp->enrollments!=NULL)  
+        {
+            printf("Enrolled in: %s \nGrade: %c \n", temp->enrollments->subjectptr->name , temp->enrollments->grade);
+            if(temp->enrollments->subjectptr != NULL && temp->enrollments->subjectptr->subjectTeacher != NULL )
+            {
+                printf("Teacher: %s \n" , temp->enrollments->subjectptr->subjectTeacher->name);
+            }
+        }
+        else printf("Enrolled: Not yet enrolled in any subject \n");
         temp = temp->next; 
         printf("\n");
     }
@@ -87,10 +94,17 @@ struct Student* findTail(struct Student* head){ //finds linked list tail
 
     while (temp != NULL) { //cycles through students until end of list or student found
         if((temp->id) == id){ //if student found
-            printf("ID: %d \n", temp->id); //print details
+            printf("ID: %d \n", temp->id); 
             printf("Name: %s \n", temp->name); 
-            printf("Enrollment Address: %p \n", (void*)temp->enrollments);
-            printf("Next Address: %p \n", (void*)temp->next);
+            if(temp->enrollments!=NULL)  
+            {
+                printf("Enrolled in: %s \nGrade: %c \n", temp->enrollments->subjectptr->name , temp->enrollments->grade);
+                    if(temp->enrollments->subjectptr != NULL && temp->enrollments->subjectptr->subjectTeacher != NULL )
+                    {
+                        printf("Teacher: %s \n" , temp->enrollments->subjectptr->subjectTeacher->name);
+                    }
+            }
+            else printf("Enrolled: Not yet enrolled in any subject \n");
             return temp;
         }
         temp = temp->next; 
@@ -131,25 +145,27 @@ void displayStudentByName() { //Takes user input of name and compares to name fi
 
         // Once valid string has been input, search linked list
         struct Student* temp = head;
-        short found = 0;
 
-        while (temp != NULL && found == 0) { 
+        while (temp != NULL) { 
             if (strcmp(temp->name, name) == 0) { // strcomp compares the input string to the name field of student struct
-                printf("ID: %d \n", temp->id);
-                printf("Name: %s \n", temp->name);
-                printf("Enrollment Address: %p \n", (void*)temp->enrollments);
-                printf("Next Address: %p \n\n", (void*)temp->next);
-                found = 1; // Mark as found
+                printf("ID: %d \n", temp->id); 
+                printf("Name: %s \n", temp->name); 
+                if(temp->enrollments!=NULL)  
+                {
+                    printf("Enrolled in: %s \nGrade: %c \n", temp->enrollments->subjectptr->name , temp->enrollments->grade);
+                        if(temp->enrollments->subjectptr != NULL && temp->enrollments->subjectptr->subjectTeacher != NULL )
+                        {
+                            printf("Teacher: %s \n" , temp->enrollments->subjectptr->subjectTeacher->name);
+                        }
+                }
+                else printf("Enrolled: Not yet enrolled in any subject \n");
+                return;
             }
             temp = temp->next;
         }
 
-        if (found == 0) { // If no matching name was found
-            printf("Student not found, please try a different name.\n");
-            continue; // Reprompt for input.
-        } else {
-            break; // exit loop once student found by name
-        }
+        printf("Student not found, please try a different name.\n");
+        
     }
 }
 
